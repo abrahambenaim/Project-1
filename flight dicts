@@ -1,0 +1,114 @@
+HIPMUNK JSON DICTIONARY KEYS
+
+> JSON response major dict_keys:
+['cabin_map', 'booking_agent', 'suggestions', 'airlines', 'itins' (see below), 'equipments', 'done', 'alliances', 
+'smb_booking_id', 'last_offset', 'search', 'airports', 'currency', 'inline_ads', 'routings' (see below), 'is_search_for_business', 'legs'(see below)]
+
+** Takes an example itins-UID (Unique IDentifier) to trace how the different dictionaries link up
+
+*1itins-UID: 7e712236c1d72c1c24dc3227386f75be
+*booking_urls UID: 8T6eUQV  *repeats in another itins-UID (see bottom for 2itins-UID 18c24e8ff785a24c9e7db468823e2d47)
+*[booking_urls][leg_details][fare_basis_codes]: EAA0AQFS (*also repeats in a different itins UID (same itins-uid as booking_url uid above)
+
+> Structure of "itins" dict:
+['itins'][*UID*]['agony']
+                ['booking_urls] [*UID*] [basefare]
+                                        [booking_currency]
+                                        [iden] -- redundancy of booking_url UID (8T6eUQV)
+                                        [kind]
+                                        [leg_details]   [branded_fares]
+                                                        [fare_basis_codes] -- also repeat in another itins-UID (EAA0AQFS)
+                                                        ['rbds]
+                                        ['name'] - airline name
+                                        ['original_price']
+                                        ['price']
+                                        ['provider_type']
+                                        ['sort_rank']
+                                        ['unrounded_price']
+                                        ['url_type']
+                ['bundle_iden'] - unique identifier that repeats in another itins-UID (this itins-UID is different from the booking_urls's itins-UID; ex.: 0c0fe8e2f1628491c3f28b8c074cad8c)
+                ['dependability_score]
+                ['iden'] - *redundancy; same as this itins-UID at beginning of dict (7e712236c1d72c1c24dc3227386f75be)
+                ['price']
+                ['routing_idens'] - links to 'routings' Dict as routings-UID (ex. 776753ba92ecc57e43f0cafa3e5245d0)
+                ['unrounded price']
+
+
+*routings UID: 776753ba92ecc57e43f0cafa3e5245d0
+
+> Structure of 'routings' dict":
+['routings'][*UID*] {['bundle_iden']
+                    ['dependability_score']  (could pull to use for agony)
+                    dominated_by  - X don't need
+                    dominates   - X don't need
+                    ['iden'] - redundancy of routing UID
+                    ['leg_idens'] - links to UID in 'legs' dict; multiple leg_idens items means multiple stops
+                    }
+
+
+*legs UID: 015f665a2d9b2cdadc4d7e2ba30b70c9  (links up to leg_idens UID in routings dict)
+
+> Structure of 'legs' dict:
+['legs'][*UID*] {[1]- 'amenities [aircraft;barebones;basic_header;basic_text;entertainment;food...wifi]
+                [2] - 'arrive_iso' time/date of arrival
+                [3] - 'cabin'
+                [4] - 'depart_iso'
+                [5] - 'equipment'
+                [6] - 'express'
+                [7]-'from_code' (airport code)
+                [8]- 'marketing_num' (flight number)
+                [10] 'operating_num' (flight number)
+                [11] 'to_code' (airport code destination)
+                [12] - wifi
+
+> Structure of 'search' dict: states the search parameters
+['search']  ['cabin']
+            ['children']
+            [country]
+            [currency]
+            [form]
+            [groups][date]
+                    [days]
+                    [from_loc][airports] (further dictionaries)
+                    [to_loc] ['airports'](further dictionaries)
+            [infants_lap]
+            [infants_seat]
+            [is_domestic]
+            [is_search_for_business]
+            [language]
+            [pax] - # adults
+            [roundtrip]
+            [search_token] - UID for search
+            [seniors]
+            [sub_kind] - ex."oneway"
+            ['tab_iden'] - ex. from,to,date
+            ['total_seats']
+            ['unique_search_id']
+            ['url']
+
+> Structure of 'suggestions' dict:
+['suggestions']['UID']  ['currency']
+                        ['price']
+                        ['routings'][depart]
+                                    [from_code]
+                                    [mode]
+                                    [to_code]
+
+
+WORK IN PROGRESS:
+trying to see how the different Unique IDentifiers (UIDs) link up across dictionaries and between items in the same dictionary (e.g., Itins)
+---------------------------------------------
+bundle_iden UID from 1itins-uid: 0c0fe8e2f1628491c3f28b8c074cad8c  *can repeat in different itin UIDs (but not the same itin-uid as bookin_url uid or fare_basis_code)
+
+new 2itins-UID 18c24e8ff785a24c9e7db468823e2d47 (connected to 1itins by booking_url and fare_basis_code)
+2A-itins-UID: 9ad121250a1658e8adddb19e6c996d9a (connected to booking_url UID from 2itins-uid)
+
+new 3itins-UID 0314a4fbd371966b7b8c38daedfd91d7 (connected to 1itins-uid by bundle_iden)
+booking_url UID for new itins_uid: 2WDTfb0
+fare_basis_code : EAA0AQES
+
+
+
+
+
+                
